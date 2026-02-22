@@ -1,4 +1,4 @@
-# Получение координат крестиков (x), их проверка, а также обновление базы доступных координат и словаря координат для крестиков (x)
+# Получение координат крестиков (x), их проверка, а также обновление базы доступных координат и словаря координат крестиков (x)
 def x_move():
     while True:
         x_horizontal = int(input("Игрок 1: Координата по горизонтали: "))
@@ -19,7 +19,7 @@ def x_move():
         playground[x_horizontal].remove(x_vertical)
         return
 
-# Получение координат ноликов (о), их проверка, а также обновление базы доступных координат и словаря координат для ноликов (о)
+# Получение координат ноликов (о), их проверка, а также обновление базы доступных координат и словаря координат ноликов (о)
 def o_move():
     while True:
         o_horizontal = int(input("Игрок 2: Координата по горизонтали: "))
@@ -81,7 +81,7 @@ def is_draw_decorator(winner):
     return wrapper
 
 
-# Проверка победы для крестиков (x)
+# Проверка победы крестиков (x)
 @is_draw_decorator
 def is_winner_x():
     winner_count = 0
@@ -112,7 +112,7 @@ def is_winner_x():
         print("Игрок 1: Победа!")
         return exit()
 
-# Проверка победы для ноликов (о)
+# Проверка победы ноликов (о)
 @is_draw_decorator
 def is_winner_o():
     winner_count = 0
@@ -180,15 +180,16 @@ for i in playground.values():
         count += 1
 
 
-# Создание словаря для записи координат для крестиков (x)
+# Создание словаря для записи координат крестиков (x)
 x_coord = {i: [] for i in range(field_dimensions)}
 x_coord_vertical = list(x_coord.values())
 
-# Создание словаря для записи координат для ноликов (о)
+# Создание словаря для записи координат ноликов (о)
 o_coord = {i: [] for i in range(field_dimensions)}
 o_coord_vertical = list(o_coord.values())
 
 
+# Выполнение программы
 while True:
     x_move()
     playground_print()
