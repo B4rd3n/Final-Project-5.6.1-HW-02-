@@ -162,7 +162,7 @@ field_dimensions = options[field_dimensions]
 
 # Печать пустого игрового поля
 for i in range(field_dimensions):
-    print(f"  {i}", end=" ") if i == 0 else print(i, end=" ")
+    print(f"\n  {i}", end=" ") if i == 0 else print(i, end=" ")
 print()
 for i in range(field_dimensions):
     print(i, end=" ")
