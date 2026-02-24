@@ -1,51 +1,29 @@
 import sys
 
 
-
-# Получение координат крестиков (x), их проверка, а также обновление базы доступных координат и словаря координат крестиков (x)
-def x_move(field, coords):
+# Получение координат, их проверка, а также обновление базы доступных координат и словаря координат
+def move(field: dict, coords: dict, player):
     while True:
-        x_horizontal = int(input("Игрок 1: Координата по горизонтали: "))
-        x_vertical = int(input("Игрок 1: Координата по вертикали: "))
+        horizontal = int(input(f"Игрок {player}: Координата по горизонтали: "))
+        vertical = int(input(f"Игрок {player}: Координата по вертикали: "))
 
-        while x_horizontal not in field.keys() or x_vertical not in field.get(x_horizontal):
-            if any([x_horizontal < 0,
-                x_vertical < 0,
-                x_horizontal >= field_dimensions,
-                x_vertical >= field_dimensions]):
-                print("Координата вне поля!\n")
+        while horizontal not in field.keys() or vertical not in field.get(horizontal):
+            if any([horizontal < 0,
+                vertical < 0,
+                horizontal >= field_dimensions,
+                vertical >= field_dimensions]):
+                print("\nКоордината вне поля!\n")
             else:
-                print("Эта координата уже занята!\n")
-            x_horizontal = int(input("Игрок 1: Координата по горизонтали: "))
-            x_vertical = int(input("Игрок 1: Координата по вертикали: "))
+                print("\nЭта координата уже занята!\n")
+            horizontal = int(input(f"Игрок {player}: Координата по горизонтали: "))
+            vertical = int(input(f"Игрок {player}: Координата по вертикали: "))
 
-        coords[x_horizontal].append(x_vertical)
-        field[x_horizontal].remove(x_vertical)
-        return
-
-# Получение координат ноликов (о), их проверка, а также обновление базы доступных координат и словаря координат ноликов (о)
-def o_move(field, coords):
-    while True:
-        o_horizontal = int(input("Игрок 2: Координата по горизонтали: "))
-        o_vertical = int(input("Игрок 2: Координата по вертикали: "))
-
-        while o_horizontal not in field.keys() or o_vertical not in field.get(o_horizontal):
-            if any([o_horizontal < 0,
-                o_vertical < 0,
-                o_horizontal >= field_dimensions,
-                o_vertical >= field_dimensions]):
-                print("Координата вне поля!\n")
-            else:
-                print("Эта координата уже занята!\n")
-            o_horizontal = int(input("Игрок 2: Координата по горизонтали: "))
-            o_vertical = int(input("Игрок 2: Координата по вертикали: "))
-
-        coords[o_horizontal].append(o_vertical)
-        field[o_horizontal].remove(o_vertical)
+        coords[horizontal].append(vertical)
+        field[horizontal].remove(vertical)
         return
 
 # Обновление внешнего вида игрового поля
-def playground_print(x_v, o_v,):
+def playground_print(x_v, o_v):
 
     for p in range(field_dimensions):
         print(f"\n  {p}", end=" ") if p == 0 else print(p, end=" ")
@@ -85,15 +63,15 @@ def is_draw_decorator(winner):
     return wrapper
 
 
-# Проверка победы крестиков (x)
+# Проверка победы
 @is_draw_decorator
-def is_winner_x(coord, coords_v, field):
+def is_winner(coord: dict, coords_v, field: dict, player):
     winner_count = 0
 
     # Проверка победы по вертикали
     for k in range(field_dimensions):
         if len(coord[k]) == field_dimensions:
-            print("Игрок 1: Победа!")
+            print(f"Игрок {player}: Победа!")
             sys.exit()
 
     # Проверка победы по горизонтали
@@ -101,7 +79,7 @@ def is_winner_x(coord, coords_v, field):
         for m in coords_v:
             winner_count += m.count(n)
             if winner_count == field_dimensions:
-                print("Игрок 1: Победа!")
+                print(f"Игрок {player}: Победа!")
                 sys.exit()
         if winner_count == field_dimensions:
             break
@@ -113,42 +91,8 @@ def is_winner_x(coord, coords_v, field):
 
     if (all(right_diagonal[item] in coord[item] for item in right_diagonal)
             or all(left_diagonal[item] in coord[item] for item in left_diagonal)):
-        print("Игрок 1: Победа!")
+        print(f"Игрок {player}: Победа!")
         sys.exit()
-
-# Проверка победы ноликов (о)
-@is_draw_decorator
-def is_winner_o(coord, coords_v, field):
-    winner_count = 0
-
-    # Проверка победы по вертикали
-    for k in range(field_dimensions):
-        if len(coord[k]) == field_dimensions:
-            print("Игрок 2: Победа!")
-            sys.exit()
-
-    # Проверка победы по горизонтали
-    for n in range (field_dimensions):
-        for m in coords_v:
-            winner_count += m.count(n)
-            if winner_count == field_dimensions:
-                print("Игрок 2: Победа!")
-                sys.exit()
-        if winner_count == field_dimensions:
-            break
-        winner_count = 0
-
-    # Проверка победы по диагонали
-    right_diagonal = {step:step for step in range(field_dimensions)}
-    left_diagonal = {step:field_dimensions - 1 - step for step in range(field_dimensions)}
-
-    if (all(right_diagonal[item] in coord[item] for item in right_diagonal)
-            or all(left_diagonal[item] in coord[item] for item in left_diagonal)):
-        print("Игрок 2: Победа!")
-        sys.exit()
-
-
-
 
 
 # Приветствие и выбор размеров игрового поля
@@ -162,17 +106,9 @@ while field_dimensions not in options:
 
 field_dimensions = options[field_dimensions]
 
-
-
-# Печать пустого игрового поля
-for i in range(field_dimensions):
-    print(f"\n  {i}", end=" ") if i == 0 else print(i, end=" ")
-print()
-for i in range(field_dimensions):
-    print(i, end=" ")
-    print("- " * field_dimensions)
-print()
-
+# Нумерация игроков
+x = 1
+o = 2
 
 
 # Создание базы доступных для игры координат
@@ -192,13 +128,16 @@ x_coord_vertical = list(x_coord.values())
 o_coord = {i: [] for i in range(field_dimensions)}
 o_coord_vertical = list(o_coord.values())
 
+# Печать пустого игрового поля
+playground_print(x_coord_vertical, o_coord_vertical)
+
 
 # Выполнение программы
 while True:
-    x_move(playground, x_coord)
+    move(playground, x_coord, x)
     playground_print(x_coord_vertical, o_coord_vertical)
-    is_winner_x(x_coord, x_coord_vertical, playground)
+    is_winner(x_coord, x_coord_vertical, playground, x)
 
-    o_move(playground, o_coord)
+    move(playground, o_coord, o)
     playground_print(x_coord_vertical, o_coord_vertical)
-    is_winner_o(o_coord, o_coord_vertical, playground)
+    is_winner(o_coord, o_coord_vertical, playground, o)
