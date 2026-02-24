@@ -1,13 +1,23 @@
 import sys
 
 
+# Проверка, введено ли именно число
+def try_expect(integer):
+    while True:
+        value = input(integer)
+        if value.isdigit():
+            return int(value)
+        else:
+            print("\nОшибка ввода! Нужно ввести целое число.\n")
+
 # Получение координат, их проверка, а также обновление базы доступных координат и словаря координат
 def move(field: dict, coords: dict, player):
     while True:
-        horizontal = int(input(f"Игрок {player}: Координата по горизонтали: "))
-        vertical = int(input(f"Игрок {player}: Координата по вертикали: "))
+        horizontal = try_expect(f"Игрок {player}: Координата по горизонтали: ")
+        vertical = try_expect(f"Игрок {player}: Координата по вертикали: ")
 
         while horizontal not in field.keys() or vertical not in field.get(horizontal):
+
             if any([horizontal < 0,
                 vertical < 0,
                 horizontal >= field_dimensions,
@@ -15,8 +25,9 @@ def move(field: dict, coords: dict, player):
                 print("\nКоордината вне поля!\n")
             else:
                 print("\nЭта координата уже занята!\n")
-            horizontal = int(input(f"Игрок {player}: Координата по горизонтали: "))
-            vertical = int(input(f"Игрок {player}: Координата по вертикали: "))
+
+            horizontal = try_expect(f"Игрок {player}: Координата по горизонтали: ")
+            vertical = try_expect(f"Игрок {player}: Координата по вертикали: ")
 
         coords[horizontal].append(vertical)
         field[horizontal].remove(vertical)
@@ -96,7 +107,7 @@ def is_winner(coord: dict, coords_v, field: dict, player):
 
 
 # Приветствие и выбор размеров игрового поля
-print('Итоговое задание "Крестики-Нолики"\n')
+print('Итоговое задание "Крестики-Нолики".\n')
 options = {"1" : 3, "2" : 5, "3" : 7}
 field_dimensions = input("Возможные размеры игрового поля \n1. 3x3 \n2. 5x5 \n3. 7x7 \n\nВпишите номер выбора: ")
 
